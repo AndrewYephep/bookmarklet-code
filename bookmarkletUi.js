@@ -1,4 +1,3 @@
-Javascript:(function() {
   if (window.__bookmarkletUiInjected) return;
   window.__bookmarkletUiInjected = true;
 
@@ -1057,4 +1056,3 @@ Javascript:(function() {
   checkForEndMessage(function() {
     initializeWithHelpCheck();
   });
-})();
