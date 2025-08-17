@@ -1,4 +1,6 @@
-  if (window.__bookmarkletUiInjected) return;
+ (function() {
+
+ if (window.__bookmarkletUiInjected) return;
   window.__bookmarkletUiInjected = true;
 
   function getDominantColors() {
@@ -1056,3 +1058,4 @@
   checkForEndMessage(function() {
     initializeWithHelpCheck();
   });
+})();
