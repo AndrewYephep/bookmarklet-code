@@ -636,24 +636,19 @@ Javascript:(function() {
     if (historyPanel && historyPanel.classList.contains('open')) positionHistoryPanel();
   });
 
-  var SUPABASE_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js";
-  var SUPABASE_URL = "https://eyjjetqrnnalhxhcvfzm.supabase.co";
-  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5ampldHFybm5hbGh4aGN2ZnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MTc1NjEsImV4cCI6MjA2MjM5MzU2MX0.aQKxa1cLtreMc8zJoueFzA0P4ELyqsJkWMYbgXJwHGY";
-
+  // Supabase client is now expected to be initialized globally by the loader script
   function loadSupabaseClient(callback) {
-    if (window.supabase) {
+    if (window.supabaseClient) {
       callback();
       return;
     }
-    if (document.getElementById('supabase-js')) {
-      document.getElementById('supabase-js').addEventListener('load', callback);
-      return;
-    }
-    var script = document.createElement('script');
-    script.id = 'supabase-js';
-    script.src = SUPABASE_CDN;
-    script.onload = callback;
-    document.head.appendChild(script);
+    // Wait for global client to be available
+    var checkInterval = setInterval(function() {
+      if (window.supabaseClient) {
+        clearInterval(checkInterval);
+        callback();
+      }
+    }, 100);
   }
 
   function setNicknameForIP(ip, nickname, callback) {
@@ -682,12 +677,9 @@ Javascript:(function() {
   }
 
   function initSupabase() {
-    if (!window.supabase) {
+    if (!window.supabaseClient) {
       setTimeout(initSupabase, 100);
       return;
-    }
-    if (!window.supabaseClient) {
-      window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
     if (!window.__bookmarkletUiSubscribed) {
       window.__bookmarkletUiSubscribed = true;
